@@ -9,9 +9,10 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    Thread thread1 , thread2 , thread3;
-    int a,b,c = 0;
+    Thread thread1, thread2, thread3;
+    int a, b, c = 0;
     Laco laco = new Laco(0);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,15 +20,17 @@ public class MainActivity extends AppCompatActivity {
         thread1 = new Thread(new Runnable() {
             @Override
             public void run() {
-                synchronized (laco){
-                    for (int i = 0 ; i < 100 ; ){
-                        if (laco.getVitri() == 0){
+                synchronized (laco) {
+                    for (int i = 0; ; ) {
+                        if (laco.getVitri() == 0) {
                             a = i;
-                            Log.d("BBB","Gia tri cua A : " + a + " , vi tri :" + i);
+                            Log.d("BBB", "Gia tri cua A : " + a + " , vi tri :" + i);
                             laco.setVitri(1);
                             laco.notifyAll();
                             i++;
-                        }else{
+                        }else if (laco.getVitri() == 3){
+                            return;
+                        }else {
                             try {
                                 laco.wait();
                             } catch (InterruptedException e) {
@@ -41,15 +44,17 @@ public class MainActivity extends AppCompatActivity {
         thread2 = new Thread(new Runnable() {
             @Override
             public void run() {
-                synchronized (laco){
-                    for (int i = 0 ; i < 100 ; ){
-                        if (laco.getVitri() == 1){
+                synchronized (laco) {
+                    for (int i = 0; ; ) {
+                        if (laco.getVitri() == 1) {
                             b = i;
-                            Log.d("BBB","Gia tri cua B : " + b + " , vi tri :" + i);
+                            Log.d("BBB", "Gia tri cua B : " + b + " , vi tri :" + i);
                             laco.setVitri(2);
                             laco.notifyAll();
                             i++;
-                        }else{
+                        }else if (laco.getVitri() == 3){
+                            return;
+                        } else {
                             try {
                                 laco.wait();
                             } catch (InterruptedException e) {
@@ -57,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     }
+
                 }
 
             }
@@ -64,22 +70,25 @@ public class MainActivity extends AppCompatActivity {
         thread3 = new Thread(new Runnable() {
             @Override
             public void run() {
-                synchronized (laco){
-                    for (int i = 0 ; i < 100 ; ){
-                        if (laco.getVitri() == 2){
+                synchronized (laco) {
+                    for (int i = 0; i < 100; ) {
+                        if (laco.getVitri() == 2) {
                             c = a + b;
-                            Log.d("BBB","Gia tri cua C : " + c + " , vi tri :" + i);
+                            Log.d("BBB", "Gia tri cua C : " + c + " , vi tri :" + i);
                             laco.setVitri(0);
                             laco.notifyAll();
                             i++;
-                        }else{
+                            if (i == 100){
+                                laco.setVitri(3);
+                                return;
+                            }
+                        } else {
                             try {
                                 laco.wait();
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
                         }
-
                     }
                 }
             }
