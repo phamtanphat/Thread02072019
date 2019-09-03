@@ -20,11 +20,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 synchronized (laco){
-                    for (int i = 0 ; i < 100 ; i++){
+                    for (int i = 0 ; i < 100 ; ){
                         if (laco.getVitri() == 0){
                             a = i;
                             Log.d("BBB","Gia tri cua A : " + a + " , vi tri :" + i);
                             laco.setVitri(1);
+                            laco.notifyAll();
+                            i++;
+                        }else{
+                            try {
+                                laco.wait();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
@@ -34,13 +42,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 synchronized (laco){
-                    for (int i = 0 ; i < 100 ; i++){
+                    for (int i = 0 ; i < 100 ; ){
                         if (laco.getVitri() == 1){
                             b = i;
                             Log.d("BBB","Gia tri cua B : " + b + " , vi tri :" + i);
                             laco.setVitri(2);
+                            laco.notifyAll();
+                            i++;
+                        }else{
+                            try {
+                                laco.wait();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
-
                     }
                 }
 
@@ -50,22 +65,30 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 synchronized (laco){
-                    for (int i = 0 ; i < 100 ; i++){
+                    for (int i = 0 ; i < 100 ; ){
                         if (laco.getVitri() == 2){
                             c = a + b;
                             Log.d("BBB","Gia tri cua C : " + c + " , vi tri :" + i);
                             laco.setVitri(0);
+                            laco.notifyAll();
+                            i++;
+                        }else{
+                            try {
+                                laco.wait();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
 
                     }
                 }
-
             }
         });
 
         thread2.start();
         thread1.start();
         thread3.start();
+
     }
 
 }
