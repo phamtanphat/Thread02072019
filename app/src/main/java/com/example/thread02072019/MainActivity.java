@@ -2,6 +2,7 @@ package com.example.thread02072019;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.database.Observable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -93,11 +94,24 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
         thread2.start();
         thread1.start();
         thread3.start();
 
+        CountDownTimer countDownTimer = new CountDownTimer(2000 ,2000) {
+            @Override
+            public void onTick(long l) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                Log.d("BBB",thread1.getState().toString());
+                Log.d("BBB",thread2.getState().toString());
+                Log.d("BBB",thread3.getState().toString());
+            }
+        };
+        countDownTimer.start();
     }
 
 }
