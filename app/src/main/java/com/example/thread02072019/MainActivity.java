@@ -9,33 +9,32 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    Thread thread;
+    Thread thread1 , thread2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        thread = new Thread(new Runnable() {
+        thread1 = new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.d("BBB","Thread A start");
+                showLog("Thread A");
             }
         });
-        thread.start();
-
-        CountDownTimer countDownTimer = new CountDownTimer(1000,1000) {
+        thread2 = new Thread(new Runnable() {
             @Override
-            public void onTick(long l) {
-
+            public void run() {
+                showLog("Thread B");
             }
-
-            @Override
-            public void onFinish() {
-                Log.d("BBB",thread.getState().toString());
-            }
-        };
-        countDownTimer.start();
+        });
+        thread2.start();
+        thread1.start();
+    }
+    synchronized private void showLog(String threadName){
+        for (int i = 0 ; i<= 1000 ; i++){
+            Log.d("BBB",threadName + " " + i + " start");
+        }
 
     }
 }
